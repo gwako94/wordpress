@@ -1,0 +1,18 @@
+# # Clone the git repo.
+steps:
+- name: 'gcr.io/cloud-builders/git'
+  id: 'Clone'
+  args: ['clone', 'https://github.com/gwako94/wordpress']
+
+- name: 'gcr.io/cloud-builders/docker'
+  id: Push
+  args:
+  - 'push'
+  - 'us-west2-docker.pkg.dev/$PROJECT_ID/wordpress-repository/wordpress:latest'
+
+- name: 'gcr.io/cloud-builders/kubectl'
+  id: Deploy
+  args: ['apply' , '-f' , 'deployment.yaml']
+  env:
+  - 'CLOUDSDK_COMPUTE_REGION=us-west2'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=gke-cluster'
